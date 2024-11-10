@@ -154,9 +154,9 @@ const TransformationForm = ({ data, action, config = null, userId, type, creditB
                     [fieldName === 'prompt' ? 'prompt' : 'to'] : value
                 }
             }))
+        }, 1000)();
 
-            return onChangeField(value);
-        }, 1000);
+        return onChangeField(value);
     }
 
     const onTransformationHandler = async () => {
@@ -199,6 +199,7 @@ const TransformationForm = ({ data, action, config = null, userId, type, creditB
                      render={({ field }) => (
                         <Select
                          onValueChange={(value)=>onSelectFieldHandler(value,field.onChange)}
+                         value={field.value}
                         >
                             <SelectTrigger className="select-field">
                                 <SelectValue placeholder="Select Size" />
@@ -222,13 +223,13 @@ const TransformationForm = ({ data, action, config = null, userId, type, creditB
                          name="prompt"
                          formLabel={type === 'remove' ? "Object to remove" : "Object to recolor"}
                          className='w-full'
-                         render={(({field})=>(
+                         render={({field})=>(
                             <Input
                              value={field.value}
                              className='input-field'
                              onChange={(e) => onInputChangeHandler('prompt', e.target.value, type, field.onChange)}
                             />
-                         ))}
+                         )}
                         />
                         {type === 'recolor' && (
                             <CustomField 
@@ -240,7 +241,7 @@ const TransformationForm = ({ data, action, config = null, userId, type, creditB
                                 <Input
                                  value={field.value}
                                  className='input-field'
-                                 onChange={(e) => onInputChangeHandler('color', e.target.value, recolor, field.onChange)}
+                                 onChange={(e) => onInputChangeHandler('color', e.target.value, 'recolor', field.onChange)}
                                 />
                             )}
                             />

@@ -1,11 +1,20 @@
-import { dataUrl, debounce, getImageSize } from '@/lib/utils'
-import { CldImage } from 'next-cloudinary'
+"use client";
+
+import { dataUrl, debounce, download, getImageSize } from '@/lib/utils'
+import { CldImage, getCldImageUrl } from 'next-cloudinary'
 import Image from 'next/image'
 import React from 'react'
 
 const TransformedImage = ({image, type, title, isTransforming, setIsTransforming, transformationConfig, hasDownload = false}) => {
-  const downloadHandler = () => {
+  const downloadHandler = (e) => {
+    e.preventDefault();
 
+    download(getCldImageUrl({
+        width: image?.width,
+        height: image?.height,
+        src: image?.publicId,
+        ...transformationConfig
+    }), title)
   }  
   return (
     <div className="flex flex-col gap-4">
@@ -41,7 +50,7 @@ const TransformedImage = ({image, type, title, isTransforming, setIsTransforming
                  onError={() => {
                     debounce(()=>{
                         (setIsTransforming && setIsTransforming(false));
-                    }, 8000);
+                    }, 8000)();
                  }}
                  {...transformationConfig}
                 />
@@ -49,10 +58,11 @@ const TransformedImage = ({image, type, title, isTransforming, setIsTransforming
                     <div className="transforming-loader">
                         <Image 
                          src="/assets/icons/spinner.svg"
-                         alt='Transforming'
+                         alt='Spinner'
                          width={50}
                          height={50}
                         />
+                        <p className='text-white'>Please wait...</p>
                     </div>
                 )}
             </div>
